@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Ord-finnar Tester</title>
+  <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css">
+  <style>body { background: #f4f4f4; }</style>
+</head>
+<body>
+  <h1>Ord-finnar Tester</h1>
+  <div id="mocha"></div>
+  <script src="https://unpkg.com/mocha/mocha.js"></script>
+  <script src="https://unpkg.com/chai/chai.js"></script>
+  <script>mocha.setup('bdd');</script>
+  <script src="words-sv.js"></script>
+  <script src="game.js"></script>
+  <script src="tests/test-gui.js"></script>
+  <script>mocha.run();</script>
+</body>
+</html>
