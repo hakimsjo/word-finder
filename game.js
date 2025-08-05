@@ -244,7 +244,7 @@ function toggleTheme() {
 function toggleSound() {
   const btn = document.getElementById('soundBtn');
   soundOn = !soundOn;
-  btn.textContent = soundOn ? '�' : '�';
+  btn.textContent = soundOn ? '🔊' : '🔇';
 }
 
 function quitGame() {
