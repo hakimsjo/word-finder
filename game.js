@@ -1,6 +1,7 @@
 // game.js - All spel-logik
 
 const GRID_SIZE = 10;
+
 let selectedCells = [];
 let selectionStart = null;
 let foundWords = new Set();
@@ -8,6 +9,22 @@ let timerInterval = null;
 let seconds = 0;
 let paused = false;
 let soundOn = true;
+let score = 0;
+let highscore = 0;
+
+function getSessionCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function setSessionCookie(name, value) {
+  document.cookie = name + '=' + encodeURIComponent(value) + '; path=/;';
+}
+
+function updateScoreboard() {
+  document.getElementById('score').textContent = score;
+  document.getElementById('highscore').textContent = highscore;
+}
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -187,6 +204,12 @@ function checkWord(word, cells) {
     for (let [r, c] of cells) {
       document.querySelector(`td[data-row='${r}'][data-col='${c}']`).classList.add('found');
     }
+    score += 10; // 10 poäng per ord
+    if (score > highscore) {
+      highscore = score;
+      setSessionCookie('highscore', highscore);
+    }
+    updateScoreboard();
     if (foundWords.size === wordsToFind.length) {
       document.getElementById('congrats').classList.add('visible');
       if (soundOn) {
@@ -208,6 +231,8 @@ function restartGame() {
   grid = createGrid(wordsToFind);
   renderGrid(grid);
   resetTimer();
+  score = 0;
+  updateScoreboard();
   startTimer();
 }
 
@@ -232,8 +257,13 @@ function quitGame() {
 let wordsToFind = pickWords(8);
 let grid = createGrid(wordsToFind);
 document.addEventListener('DOMContentLoaded', () => {
+  // Läs highscore från session cookie
+  const savedHigh = getSessionCookie('highscore');
+  highscore = savedHigh ? parseInt(savedHigh, 10) : 0;
+  score = 0;
   renderWordList(wordsToFind);
   renderGrid(grid);
+  updateScoreboard();
   startTimer();
   document.getElementById('restartBtn').onclick = restartGame;
   document.getElementById('pauseBtn').onclick = pauseTimer;
