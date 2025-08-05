@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ord-finnar</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+</head>
+<body>
+  <div class="game-header">
+    <div class="timer" id="timer">00:00</div>
+    <div class="controls">
+      <button id="restartBtn">🔄 Starta om</button>
+      <button id="pauseBtn">⏸️ Pausa</button>
+      <button id="soundBtn">🔊</button>
+      <button id="themeBtn">🌙</button>
+      <button id="quitBtn">🚪 Avsluta</button>
+    </div>
+  </div>
+  <div class="word-list-container">
+    <h2>Ord att hitta</h2>
+    <ul id="wordList"></ul>
+  </div>
+  <div class="grid-container">
+    <table id="letterGrid"></table>
+  </div>
+  <div id="congrats" class="hidden">Grattis! Du hittade alla ord!</div>
+  <script src="words-sv.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
