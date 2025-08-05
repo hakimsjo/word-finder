@@ -2,6 +2,7 @@
 
 const GRID_SIZE = 10;
 let selectedCells = [];
+let selectionStart = null;
 let foundWords = new Set();
 let timerInterval = null;
 let seconds = 0;
@@ -105,8 +106,6 @@ function renderGrid(grid) {
       cell.dataset.row = r;
       cell.dataset.col = c;
       cell.addEventListener('mousedown', handleCellDown);
-      cell.addEventListener('mouseenter', handleCellEnter);
-      cell.addEventListener('mouseup', handleCellUp);
       row.appendChild(cell);
     }
     table.appendChild(row);
@@ -124,31 +123,49 @@ function renderWordList(words) {
   }
 }
 
+
 function handleCellDown(e) {
   if (paused) return;
-  clearSelection();
-  this.classList.add('selected');
-  selectedCells = [[+this.dataset.row, +this.dataset.col]];
-  document.addEventListener('mouseup', handleCellUp);
-}
-
-function handleCellEnter(e) {
-  if (selectedCells.length === 0 || paused) return;
-  const last = selectedCells[selectedCells.length-1];
-  const r = +this.dataset.row, c = +this.dataset.col;
-  if (!selectedCells.some(([row, col]) => row === r && col === c)) {
+  const r = +this.dataset.row;
+  const c = +this.dataset.col;
+  // Om ingen cell är vald, börja ny markering
+  if (selectedCells.length === 0) {
+    clearSelection();
+    selectedCells = [[r, c]];
     this.classList.add('selected');
-    selectedCells.push([r, c]);
+    return;
+  }
+  // Kontrollera att den nya cellen är granne med senaste valda
+  const [lastR, lastC] = selectedCells[selectedCells.length - 1];
+  if (Math.abs(r - lastR) <= 1 && Math.abs(c - lastC) <= 1 && !(r === lastR && c === lastC)) {
+    // Kolla att cellen inte redan är vald
+    if (!selectedCells.some(([row, col]) => row === r && col === c)) {
+      selectedCells.push([r, c]);
+      this.classList.add('selected');
+      // Om användaren klickar på sista bokstaven, kontrollera ordet
+      const word = selectedCells.map(([rr,cc]) => document.querySelector(`td[data-row='${rr}'][data-col='${cc}']`).textContent).join('');
+      checkWord(word, selectedCells);
+      // Om ordet är rätt eller för långt, nollställ
+      if (word.length >= Math.max(...wordsToFind.map(w => w.length))) {
+        setTimeout(clearSelection, 200);
+        selectedCells = [];
+      }
+    }
+  } else {
+    // Klick utanför tillåtet område nollställer markeringen
+    clearSelection();
+    selectedCells = [];
   }
 }
 
+
+function handleCellEnter(e) {
+  // Ingen dragmarkering längre
+}
+
+
 function handleCellUp(e) {
-  if (selectedCells.length === 0) return;
-  const word = selectedCells.map(([r,c]) => document.querySelector(`td[data-row='${r}'][data-col='${c}']`).textContent).join('');
-  checkWord(word, selectedCells);
-  clearSelection();
-  selectedCells = [];
-  document.removeEventListener('mouseup', handleCellUp);
+  // Ej i bruk längre
 }
 
 function clearSelection() {
