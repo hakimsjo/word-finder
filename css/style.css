@@ -80,9 +80,29 @@ body.dark {
   border-radius: 0 0 1rem 1rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+.timers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 1.5rem;
+  gap: 0.2rem;
+}
 .timer {
   font-size: 1.5rem;
   font-weight: bold;
+  color: #fff;
+  background: rgba(0,0,0,0.08);
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.8rem;
+  margin-bottom: 0.1rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.timer.word-timer {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #fff;
+  background: rgba(0,0,0,0.04);
+  padding: 0.1rem 0.8rem;
 }
 .scoreboard {
   display: flex;

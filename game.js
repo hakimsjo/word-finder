@@ -7,6 +7,7 @@ let selectionStart = null;
 let foundWords = new Set();
 let timerInterval = null;
 let seconds = 0;
+let wordSeconds = 0;
 let paused = false;
 let soundOn = true;
 let score = 0;
@@ -41,7 +42,9 @@ function pad(num) {
 function updateTimer() {
   if (!paused) {
     seconds++;
+    wordSeconds++;
     document.getElementById('timer').textContent = `${pad(Math.floor(seconds/60))}:${pad(seconds%60)}`;
+    document.getElementById('wordTime').textContent = `${pad(Math.floor(wordSeconds/60))}:${pad(wordSeconds%60)}`;
   }
 }
 
@@ -53,7 +56,9 @@ function startTimer() {
 function resetTimer() {
   clearInterval(timerInterval);
   seconds = 0;
+  wordSeconds = 0;
   document.getElementById('timer').textContent = '00:00';
+  document.getElementById('wordTime').textContent = '00:00';
 }
 
 function pauseTimer() {
@@ -204,7 +209,11 @@ function checkWord(word, cells) {
     for (let [r, c] of cells) {
       document.querySelector(`td[data-row='${r}'][data-col='${c}']`).classList.add('found');
     }
-    score += 10; // 10 poäng per ord
+    // Poäng: Ju snabbare desto mer. 10 - 1 poäng per 10 sekunder, minst 1 poäng, baserat på ord-timer.
+    const wordPoints = Math.max(1, 10 - Math.floor(wordSeconds / 10));
+    score += wordPoints;
+    wordSeconds = 0;
+    document.getElementById('wordTime').textContent = '00:00';
     if (score > highscore) {
       highscore = score;
       setSessionCookie('highscore', highscore);
