@@ -10,7 +10,8 @@
 <body>
   <div class="game-header">
     <div class="timer" id="timer">00:00</div>
-    <div class="controls">
+    <button id="menuBtn" class="menu-btn" aria-label="Meny">☰</button>
+    <div class="controls" id="controlsMenu">
       <button id="restartBtn">🔄 Starta om</button>
       <button id="pauseBtn">⏸️ Pausa</button>
       <button id="soundBtn">🔊</button>
@@ -26,7 +27,29 @@
     <table id="letterGrid"></table>
   </div>
   <div id="congrats" class="hidden">Grattis! Du hittade alla ord!</div>
+  <audio id="clickSound" src="assets/click.wav" preload="auto"></audio>
+  <audio id="winSound" src="assets/win.wav" preload="auto"></audio>
   <script src="data/words-sv.js"></script>
   <script src="game.js"></script>
+  <script>
+    // Visa/dölj meny på små skärmar
+    const menuBtn = document.getElementById('menuBtn');
+    const controlsMenu = document.getElementById('controlsMenu');
+    menuBtn.addEventListener('click', () => {
+      controlsMenu.classList.toggle('open');
+    });
+    // Stäng meny när man klickar utanför på små skärmar
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 600 && !controlsMenu.contains(e.target) && e.target !== menuBtn) {
+        controlsMenu.classList.remove('open');
+      }
+    });
+    // Stäng meny när man klickar på en kontrollknapp på små skärmar
+    controlsMenu.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (window.innerWidth <= 600) controlsMenu.classList.remove('open');
+      });
+    });
+  </script>
 </body>
 </html>

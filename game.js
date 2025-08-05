@@ -7,6 +7,7 @@ let foundWords = new Set();
 let timerInterval = null;
 let seconds = 0;
 let paused = false;
+let soundOn = true;
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -126,6 +127,13 @@ function renderWordList(words) {
 
 function handleCellDown(e) {
   if (paused) return;
+  if (soundOn) {
+    const clickAudio = document.getElementById('clickSound');
+    if (clickAudio) {
+      clickAudio.currentTime = 0;
+      clickAudio.play();
+    }
+  }
   const r = +this.dataset.row;
   const c = +this.dataset.col;
   // Om ingen cell är vald, börja ny markering
@@ -181,6 +189,13 @@ function checkWord(word, cells) {
     }
     if (foundWords.size === wordsToFind.length) {
       document.getElementById('congrats').classList.add('visible');
+      if (soundOn) {
+        const winAudio = document.getElementById('winSound');
+        if (winAudio) {
+          winAudio.currentTime = 0;
+          winAudio.play();
+        }
+      }
     }
   }
 }
@@ -202,9 +217,9 @@ function toggleTheme() {
 }
 
 function toggleSound() {
-  // Placeholder för ljudhantering
   const btn = document.getElementById('soundBtn');
-  btn.textContent = btn.textContent === '🔊' ? '🔇' : '🔊';
+  soundOn = !soundOn;
+  btn.textContent = soundOn ? '�' : '�';
 }
 
 function quitGame() {
